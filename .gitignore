@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+
+# Terraform local state
+*.tfstate
+*.tfstate.backup
+
+# Crash log files
+crash.log
+
+# Exclude directories created by Terraform
+**/.terraform/
+
+# Ignore Terraform provider lock files if not committed
+**/.terraform.lock.hcl
+
+# Override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# CLI configuration
+.terraformrc
+terraform.rc
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local build artifacts
+*.log
