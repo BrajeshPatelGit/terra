@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+#This is a Terraform project, so ignore the .terraform directory and any local state files
+Ud-Dolphin/.terraform/*
+
 # Terraform local state
 *.tfstate
 *.tfstate.backup
