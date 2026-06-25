@@ -1,0 +1,24 @@
+## ami-07caf09b362be10b8  <<-- 21 characters long, start with ami-
+
+variable "server_ami" {
+  type        = string
+  description = "The id of the machine image (AMI) to use for the EC2 Instance."
+  validation {
+    condition     = length(var.server_ami) ==21 && substr(var.server_ami, 0, 4) == "ami-"
+    error_message = "The image_id value must be a valid AMI id, 21 alphanumeric characters long and starts with \"ami-\"."
+  }
+}
+
+
+variable "instance_type" { 
+  type = string 
+  # default = "t2.micro" 
+  description = "instance type - must be t2. type"
+  validation { 
+    condition = contains(["t2.nano", "t2.micro", "t2.small"], var.instance_type) && substr(var.instance_type, 0, 3) == "t2."
+    error_message = "Supplied default instance is not an allowed instance type. Allowed types are t2.nano, t2.micro, t2.small only" 
+   } 
+  }
+
+
+

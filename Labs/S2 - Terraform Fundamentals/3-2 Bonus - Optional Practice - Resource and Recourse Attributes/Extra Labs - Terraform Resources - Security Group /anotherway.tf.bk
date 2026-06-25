@@ -1,0 +1,46 @@
+# Create a VPC and create a security group. 
+# The security group will be within the VPC. 
+# The security group will have an inbound (ingress) rule allowing HTTPS (port 443) from the VPC CIDR block,  and an outbound (egress) rules allowing all ports to all destinations. 
+
+
+# Create the VPC
+
+resource "aws_vpc" "main" {
+  cidr_block = "10.0.0.0/16"
+  tags = {
+    Name= "custom_VPC"
+  }
+}
+
+# note the name of the resource to create the security group itself, that is aws_security_group
+
+resource "aws_security_group" "allow_tls" {
+  name        = "allow_tls"
+  description = "Allow TLS inbound traffic and all outbound traffic"
+  vpc_id      = aws_vpc.main.id
+
+  tags = {
+    Name = "allow_tls"
+  }
+}
+
+# note the resource to create an ingress rule in the security group, which is aws_vpc_security_group_ingress_rule
+
+resource "aws_vpc_security_group_ingress_rule" "allow_tls_ipv4" {
+  security_group_id = aws_security_group.allow_tls.id
+  cidr_ipv4         = aws_vpc.main.cidr_block
+  from_port         = 443
+  ip_protocol       = "tcp"
+  to_port           = 443
+}
+
+
+
+# note the resource to create an egress rule in the security group, which is aws_vpc_security_group_egress_rule
+
+resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
+  security_group_id = aws_security_group.allow_tls.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
+}
+

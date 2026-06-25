@@ -1,0 +1,15 @@
+## ami-07caf09b362be10b8  <<-- 21 characters long, start with ami-
+
+
+provider "aws" {
+  region  = "us-east-1"
+  profile = "dev_admin"
+}
+
+resource "aws_instance" "myec2" {
+  ami           = var.server_ami
+  instance_type = var.instance_type
+  tags = {
+    Name = "the AMI of this Server is : ${var.server_ami}"
+  }
+}
