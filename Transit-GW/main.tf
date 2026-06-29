@@ -43,13 +43,50 @@ variable "vpcs" {
   }
 }
 
+variable "resource_names" {
+  description = "Name tags for each VPC, subnet, internet gateway, and route table"
+  type = map(object({
+    vpc_name            = string
+    subnet_name         = string
+    internet_gateway_name = string
+    route_table_name    = string
+  }))
+
+  default = {
+    vpc1 = {
+      vpc_name               = "vpc1"
+      subnet_name            = "vpc1-public-subnet"
+      internet_gateway_name  = "vpc1-igw"
+      route_table_name       = "vpc1-public-rt"
+    }
+    vpc2 = {
+      vpc_name               = "vpc2"
+      subnet_name            = "vpc2-public-subnet"
+      internet_gateway_name  = "vpc2-igw"
+      route_table_name       = "vpc2-public-rt"
+    }
+    vpc3 = {
+      vpc_name               = "vpc3"
+      subnet_name            = "vpc3-public-subnet"
+      internet_gateway_name  = "vpc3-igw"
+      route_table_name       = "vpc3-public-rt"
+    }
+    vpc4 = {
+      vpc_name               = "vpc4"
+      subnet_name            = "vpc4-public-subnet"
+      internet_gateway_name  = "vpc4-igw"
+      route_table_name       = "vpc4-public-rt"
+    }
+  }
+}
+
 resource "aws_vpc" "this" {
   for_each = var.vpcs
 
   cidr_block = each.value.cidr_block
 
   tags = {
-    Name = each.key
+    Name = var.resource_names[each.key].vpc_name
   }
 }
 
@@ -62,7 +99,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${each.key}-public-subnet"
+    Name = var.resource_names[each.key].subnet_name
   }
 }
 
@@ -72,7 +109,7 @@ resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this[each.key].id
 
   tags = {
-    Name = "${each.key}-igw"
+    Name = var.resource_names[each.key].internet_gateway_name
   }
 }
 
@@ -87,7 +124,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "${each.key}-public-rt"
+    Name = var.resource_names[each.key].route_table_name
   }
 }
 
