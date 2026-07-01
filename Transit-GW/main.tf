@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6"
+    }
   }
 }
 
@@ -43,7 +47,7 @@ variable "vpcs" {
     vpc3 = {
       cidr_block  = "10.2.0.0/16"
       subnet_cidr = "10.2.1.0/24"
-      az          = "ap-south-1c"
+      az          = "ap-south-1a"
     }
     vpc4 = {
       cidr_block  = "10.3.0.0/16"
@@ -197,4 +201,13 @@ resource "aws_instance" "this" {
   tags = {
     Name = "${var.resource_names[each.key].vpc_name}-ec2"
   }
+}
+
+resource "random_string" "passwrd" {
+  length  = 16
+  special = false
+}
+
+output "passwrd" {
+  value = random_string.passwrd.result
 }
