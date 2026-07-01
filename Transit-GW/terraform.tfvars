@@ -25,6 +25,14 @@ resource_names = {
   }
 }
 
+# Edit these values to match your AWS environment.
+instance_ami_ids = {
+  vpc1 = "ami-REPLACE_WITH_AMI_ID"
+  vpc2 = "ami-REPLACE_WITH_AMI_ID"
+  vpc3 = "ami-REPLACE_WITH_AMI_ID"
+  vpc4 = "ami-REPLACE_WITH_AMI_ID"
+}
+
 instance_key_pairs = {
   vpc1 = "keypair-vpc1"
   vpc2 = "keypair-vpc2"

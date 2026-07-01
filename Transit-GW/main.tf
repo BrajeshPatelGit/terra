@@ -106,6 +106,12 @@ variable "instance_key_pairs" {
   }
 }
 
+variable "instance_ami_ids" {
+  description = "Custom AMI IDs for each EC2 instance. If not provided, the latest Amazon Linux 2 AMI will be used."
+  type        = map(string)
+  default     = {}
+}
+
 resource "aws_vpc" "this" {
   for_each = var.vpcs
 
@@ -191,7 +197,7 @@ resource "aws_security_group" "public" {
 resource "aws_instance" "this" {
   for_each = var.vpcs
 
-  ami                         = data.aws_ami.amazon_linux_2.id
+  ami                         = lookup(var.instance_ami_ids, each.key, data.aws_ami.amazon_linux_2.id)
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.public[each.key].id
   key_name                    = var.instance_key_pairs[each.key]
