@@ -11,6 +11,13 @@ resource "aws_instance" "myec2" {
   instance_type               = "t2.micro"
   subnet_id                   = aws_subnet.main.id
   vpc_security_group_ids      = [aws_security_group.main.id]
+  key_name                    = "keypair-vpc1"
+  availability_zone           = "ap-south-1a"
+  associate_public_ip_address = true
+
+  tags = {
+    Name = "main-ec2"
+  }
 
   depends_on = [aws_vpc.main, aws_security_group.main]
 }

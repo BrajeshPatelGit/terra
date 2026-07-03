@@ -1,15 +1,25 @@
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "main-vpc"
+  }
 }
 
 resource "aws_subnet" "main" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.1.0/24"
+  availability_zone       = "ap-south-1a"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "main-subnet"
+  }
 }
 
 resource "aws_security_group" "main" {
   vpc_id = aws_vpc.main.id
+  name   = "main-sg"
 
   ingress {
     from_port   = 22
@@ -30,5 +40,9 @@ resource "aws_security_group" "main" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "main-sg"
   }
 }
