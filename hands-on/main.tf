@@ -19,7 +19,7 @@ resource "aws_instance" "myec2" {
     Name = "main-ec2"
   }
 
-  depends_on = [aws_vpc.main, aws_security_group.main]
+ # depends_on = [aws_vpc.main, aws_security_group.main]
 }
 
 output "instance_DNS" {
