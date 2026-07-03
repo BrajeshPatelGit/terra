@@ -8,11 +8,11 @@ provider "aws" {
 
 resource "aws_instance" "myec2" {
   ami                         = "ami-0d351f1b760a30161"
-  associate_public_ip_address = true
-  availability_zone           = "ap-south-1a"
   instance_type               = "t2.micro"
-  key_name                    = "keypair-vpc1"
+  subnet_id                   = aws_subnet.main.id
+  vpc_security_group_ids      = [aws_security_group.main.id]
 
+  depends_on = [aws_vpc.main, aws_security_group.main]
 }
 
 output "instance_DNS" {
