@@ -12,30 +12,6 @@ resource "aws_instance" "myec2" {
   availability_zone           = "ap-south-1a"
   instance_type               = "t2.micro"
   key_name                    = "keypair-vpc1"
-  vpc_security_group_ids      = ["sg-021feeb0880579ad4"]
-
-  connection {
-    type        = "ssh"      # ssh or winrm
-    user        = "ec2-user" # the ssh user to use for the connection
-    private_key = file("~/downloads/keypair-vpc1.pem")
-    host        = self.public_ip
-  }
-
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo yum update -y",
-      "sudo amazon-linux-extras enable nginx1",
-      "sudo yum clean metadata",
-      "sudo yum -y install nginx",
-      "sudo systemctl enable nginx",
-      "sudo systemctl start nginx"
-    ]
-  }
-
-  timeouts {
-    create = "10m"
-  }
 
 }
 
