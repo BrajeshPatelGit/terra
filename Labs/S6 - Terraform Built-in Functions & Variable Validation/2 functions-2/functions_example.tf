@@ -12,7 +12,6 @@ variable "region" {
 }
 
 data "aws_availability_zones" "current_region_azs" {}
-
 variable "ec2_tags" {
   type    = list(any)
   default = ["instance_a", "instance_b"]
