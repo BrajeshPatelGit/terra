@@ -4,9 +4,9 @@ module "s3_bucket" {
 
   bucket = "${var.bucket_prefix}-${random_id.suffix.hex}"
 
-  versioning = {
-    enabled = var.versioning_enabled
-  }
+#   versioning = {
+#     enabled = var.versioning_enabled
+#   }
 
   server_side_encryption_configuration = {
     rule = {
@@ -16,7 +16,7 @@ module "s3_bucket" {
     }
   }
 
-  block_public_acls       = var.block_public_acls
+#   block_public_acls       = var.block_public_acls
   block_public_policy     = var.block_public_policy
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
