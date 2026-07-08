@@ -13,15 +13,10 @@ module "vpc" {
   tags = { Name = "main-vpc" }
 }
 
-module "ec2" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.0"
-
-  name          = "main-ec2"
-  ami           = "ami-0d351f1b760a30161"
-  instance_type = "t2.micro"
-  subnet_id     = module.vpc.public_subnets[0]
-
+resource "aws_instance" "main" {
+  ami                    = "ami-0d351f1b760a30161"
+  instance_type          = "t2.micro"
+  subnet_id              = module.vpc.public_subnets[0]
   vpc_security_group_ids = [module.sg.security_group_id]
 
   tags = { Name = "main-ec2" }
