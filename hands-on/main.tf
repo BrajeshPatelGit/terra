@@ -1,11 +1,6 @@
 # This lab demonstrates how we can use remote provisioners to excute code on an EC2 instance after creating it
 
 
-provider "aws" {
-  region  = "ap-south-1"
-  profile = "default"
-}
-
 resource "aws_instance" "myec2" {
   ami                         = "ami-0d351f1b760a30161"
   instance_type               = "t2.micro"
@@ -19,7 +14,7 @@ resource "aws_instance" "myec2" {
     Name = "main-ec2"
   }
 
- # depends_on = [aws_vpc.main, aws_security_group.main]
+  # depends_on = [aws_vpc.main, aws_security_group.main]
 }
 
 output "instance_DNS" {
