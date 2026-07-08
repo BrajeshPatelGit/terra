@@ -15,7 +15,7 @@ module "vpc" {
 
 resource "aws_instance" "main" {
   ami                    = "ami-0d351f1b760a30161"
-  instance_type          = "t2.micro"
+  instance_type          = var.instance_type[terraform.workspace]
   subnet_id              = module.vpc.public_subnets[0]
   vpc_security_group_ids = [module.sg.security_group_id]
 
