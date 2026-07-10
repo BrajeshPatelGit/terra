@@ -16,7 +16,7 @@ module "alb_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.0"
 
-  name   = "ALBSG"
+  name   = "ALB_SG"
   vpc_id = module.vpc.vpc_id
 
   ingress_rules       = ["http-80-tcp"]
