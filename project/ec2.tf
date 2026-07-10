@@ -9,6 +9,7 @@ module "web_serv11" {
 
   subnet_id              = module.vpc.public_subnets[0]
   vpc_security_group_ids = [module.web_sg.security_group_id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_ssm.name
 
   tags = {
     Name = "web-serv11"
@@ -26,6 +27,7 @@ module "web_serv22" {
 
   subnet_id              = module.vpc.public_subnets[1]
   vpc_security_group_ids = [module.web_sg.security_group_id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_ssm.name
 
   tags = {
     Name = "web-serv22"
