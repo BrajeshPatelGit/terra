@@ -1,6 +1,6 @@
 module "web_serv11" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.0"
+  version = "= 4.5.0"
 
   name          = "web-serv11"
   ami           = "ami-01a18c38ece67e620"
@@ -17,7 +17,7 @@ module "web_serv11" {
 
 module "web_serv22" {
   source  = "terraform-aws-modules/ec2-instance/aws"
-  version = "~> 5.0"
+  version = "= 4.5.0"
 
   name          = "web-serv22"
   ami           = "ami-01a18c38ece67e620"
