@@ -69,7 +69,7 @@ variable "private_subnet2_az" {
 }
 
 variable "instance_type" {
-  type = string
+  type    = string
   default = "t2.micro"
 }
 
@@ -77,12 +77,12 @@ variable "instance_type" {
 variable "instance_profile_role_name" {
   description = "IAM instance profile role name"
   type        = string
-  default     = "EC2_SSM"
+  default     = "EC2_SSM_US"
 }
 
 
 # Target Group configuration
-variable dereg-delay {
-  type = string
-  default     = "10"
+variable "dereg-delay" {
+  type    = string
+  default = "10"
 }

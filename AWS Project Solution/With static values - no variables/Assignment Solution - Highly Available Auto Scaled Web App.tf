@@ -307,21 +307,21 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4_1" {
 
 # The instance profile will be required in the launch template to assign the IAM role to the instance that will be created by the auto scaling group
 
-# Create the profile and attach the role EC2_SSM to it
+# Create the profile and attach the role EC2_SSM_US to it
 
 resource "aws_iam_instance_profile" "LT_profile" {
   name = "Launch_template_profile"
-  role = aws_iam_role.EC2_SSM.name
+  role = aws_iam_role.EC2_SSM_US.name
 }
 
-# Create the IAM role EC2_SSM
+# Create the IAM role EC2_SSM_US
 
-resource "aws_iam_role" "EC2_SSM" {
-  name                = "EC2_SSM"
+resource "aws_iam_role" "EC2_SSM_US" {
+  name                = "EC2_SSM_US"
   assume_role_policy  = data.aws_iam_policy_document.assume_role.json 
 
     tags = {
-    Name = "EC2_SSM"
+    Name = "EC2_SSM_US"
   }
 }
 
@@ -446,7 +446,7 @@ data "aws_iam_policy_document" "managed_policy" {
 
 
 resource "aws_iam_policy" "SSM_policy" {
-  name        = "EC2_SSM-policy"
+  name        = "EC2_SSM_US-policy"
   description = "allows EC2 to connect to SSM"
   policy      = data.aws_iam_policy_document.managed_policy.json
 }
@@ -454,7 +454,7 @@ resource "aws_iam_policy" "SSM_policy" {
 # Attach the IAM policy SSM_policy to the IAM role
 
 resource "aws_iam_role_policy_attachment" "policy-attach" {
-  role       = aws_iam_role.EC2_SSM.name
+  role       = aws_iam_role.EC2_SSM_US.name
   policy_arn = aws_iam_policy.SSM_policy.arn
 }
 

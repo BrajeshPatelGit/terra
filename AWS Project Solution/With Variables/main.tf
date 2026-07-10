@@ -12,8 +12,8 @@ provider "aws" {
 # Create the VPC
 
 resource "aws_vpc" "custom_VPC" {
-  cidr_block = var.vpc_cidr_block
-  enable_dns_support = true
+  cidr_block           = var.vpc_cidr_block
+  enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
@@ -33,16 +33,16 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_internet_gateway_attachment" "igw-attach" {
   internet_gateway_id = aws_internet_gateway.igw.id
-  vpc_id = aws_vpc.custom_VPC.id
+  vpc_id              = aws_vpc.custom_VPC.id
 }
 
 # Create Public Subnet 1
 
 resource "aws_subnet" "Public_Subnet1" {
-  vpc_id              = aws_vpc.custom_VPC.id
-  cidr_block          = var.public_subnet1_cidr_block
-  availability_zone   = var.public_subnet1_az
-  
+  vpc_id            = aws_vpc.custom_VPC.id
+  cidr_block        = var.public_subnet1_cidr_block
+  availability_zone = var.public_subnet1_az
+
   tags = {
     Name = "Public_Subnet1"
   }
@@ -51,10 +51,10 @@ resource "aws_subnet" "Public_Subnet1" {
 # Create Public Subnet 2
 
 resource "aws_subnet" "Public_Subnet2" {
-  vpc_id              = aws_vpc.custom_VPC.id
-  cidr_block          = var.public_subnet2_cidr_block
-  availability_zone   = var.public_subnet2_az
-  
+  vpc_id            = aws_vpc.custom_VPC.id
+  cidr_block        = var.public_subnet2_cidr_block
+  availability_zone = var.public_subnet2_az
+
   tags = {
     Name = "Public_Subnet2"
   }
@@ -77,7 +77,7 @@ resource "aws_route_table" "public_route_table" {
   }
 
   tags = {
-    Name      = "Public_RT"
+    Name = "Public_RT"
 
   }
 }
@@ -103,10 +103,10 @@ resource "aws_route_table_association" "public_subnet2" {
 # Create private subnet 1
 
 resource "aws_subnet" "Private_Subnet1" {
-  vpc_id              = aws_vpc.custom_VPC.id
-  cidr_block          = var.private_subnet1_cidr_block
-  availability_zone   = var.private_subnet1_az
-  
+  vpc_id            = aws_vpc.custom_VPC.id
+  cidr_block        = var.private_subnet1_cidr_block
+  availability_zone = var.private_subnet1_az
+
   tags = {
     Name = "Private_Subnet1"
   }
@@ -115,10 +115,10 @@ resource "aws_subnet" "Private_Subnet1" {
 # Create private subnet 2
 
 resource "aws_subnet" "Private_Subnet2" {
-  vpc_id              = aws_vpc.custom_VPC.id
-  cidr_block          = var.private_subnet2_cidr_block
-  availability_zone   = var.private_subnet2_az
-  
+  vpc_id            = aws_vpc.custom_VPC.id
+  cidr_block        = var.private_subnet2_cidr_block
+  availability_zone = var.private_subnet2_az
+
   tags = {
     Name = "Private_Subnet2"
   }
@@ -183,7 +183,7 @@ resource "aws_route_table" "private_route_table1" {
   }
 
   tags = {
-    Name      = "Private_RT_1"
+    Name = "Private_RT_1"
 
   }
 }
@@ -213,7 +213,7 @@ resource "aws_route_table" "private_route_table2" {
   }
 
   tags = {
-    Name      = "Private_RT_2"
+    Name = "Private_RT_2"
 
   }
 }
@@ -300,22 +300,22 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4_ALB" {
 
 # The instance profile will be required in the launch template to assign the IAM role to the instance that will be created by the auto scaling group
 
-# Create the profile and attach the role EC2_SSM to it
+# Create the profile and attach the role EC2_SSM_US to it
 
 resource "aws_iam_instance_profile" "LT_profile" {
   name = "Launch_template_profile"
-  role = aws_iam_role.EC2_SSM.name
+  role = aws_iam_role.EC2_SSM_US.name
 }
 
-# Create the IAM role EC2_SSM
+# Create the IAM role EC2_SSM_US
 
-resource "aws_iam_role" "EC2_SSM" {
-  name                = "EC2_SSM"
+resource "aws_iam_role" "EC2_SSM_US" {
+  name = "EC2_SSM_US"
   # the below line attaches the trust policy to the IAM role
-  assume_role_policy  = data.aws_iam_policy_document.assume_role.json 
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 
-    tags = {
-    Name = "EC2_SSM"
+  tags = {
+    Name = "EC2_SSM_US"
   }
 }
 
@@ -439,7 +439,7 @@ data "aws_iam_policy_document" "managed_policy" {
 # Attach the created IAM policy document to the IAM policy resource
 
 resource "aws_iam_policy" "SSM_policy" {
-  name        = "EC2_SSM-policy"
+  name        = "EC2_SSM_US-policy"
   description = "allows EC2 to connect to SSM"
   policy      = data.aws_iam_policy_document.managed_policy.json
 }
@@ -447,7 +447,7 @@ resource "aws_iam_policy" "SSM_policy" {
 # Attach the IAM policy SSM_policy to the IAM role
 
 resource "aws_iam_role_policy_attachment" "policy-attach" {
-  role       = aws_iam_role.EC2_SSM.name
+  role       = aws_iam_role.EC2_SSM_US.name
   policy_arn = aws_iam_policy.SSM_policy.arn
 }
 
@@ -459,10 +459,10 @@ resource "aws_iam_role_policy_attachment" "policy-attach" {
 # Create the Target group
 
 resource "aws_lb_target_group" "WebTG" {
-  name     = "WebTG"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.custom_VPC.id
+  name                 = "WebTG"
+  port                 = 80
+  protocol             = "HTTP"
+  vpc_id               = aws_vpc.custom_VPC.id
   deregistration_delay = var.dereg-delay
 
   tags = {
@@ -478,7 +478,7 @@ resource "aws_lb" "WebALB" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.ALBSG.id]
   # the below line enables the ALB on the two Public subnets
-  subnets            = [aws_subnet.Public_Subnet1.id, aws_subnet.Public_Subnet2.id]
+  subnets = [aws_subnet.Public_Subnet1.id, aws_subnet.Public_Subnet2.id]
 
   tags = {
     Name = "WebALB"
@@ -492,7 +492,7 @@ resource "aws_lb_listener" "front_end" {
   load_balancer_arn = aws_lb.WebALB.arn
   port              = "80"
   protocol          = "HTTP"
-  
+
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.WebTG.arn
@@ -515,8 +515,8 @@ data "aws_ami" "myami" {
     values = ["amzn2-ami-hvm*"]
   }
 
-  filter { 
-    name = "root-device-type" 
+  filter {
+    name   = "root-device-type"
     values = ["ebs"]
   }
 
@@ -543,7 +543,7 @@ resource "aws_launch_template" "WebLT" {
     name = aws_iam_instance_profile.LT_profile.name
   }
 
-  image_id = data.aws_ami.myami.id
+  image_id      = data.aws_ami.myami.id
   instance_type = var.instance_type
 
   monitoring {
@@ -560,28 +560,28 @@ resource "aws_launch_template" "WebLT" {
     }
   }
 
-# user data must be base64 encoded, we cannot use the function    file() only below to replace filebase64(...)
+  # user data must be base64 encoded, we cannot use the function    file() only below to replace filebase64(...)
 
   user_data = filebase64("${path.module}/script.sh")
 }
 
- # path.module() dynamically reflects the directory containing the module’s configuration files. Using these functions can be helpful when you need to generate file paths dynamically or when dealing with modularized Terraform projects.
+# path.module() dynamically reflects the directory containing the module’s configuration files. Using these functions can be helpful when you need to generate file paths dynamically or when dealing with modularized Terraform projects.
 
 
 ## Create the auto scaling group
 
- 
- # The group will be responsible for launching, terminating, and adding/removing EC2 instances as needed. The group will use the Launch template craeted above. Also, it will use the WebSG security group.
- 
+
+# The group will be responsible for launching, terminating, and adding/removing EC2 instances as needed. The group will use the Launch template craeted above. Also, it will use the WebSG security group.
+
 resource "aws_autoscaling_group" "ASG" {
   vpc_zone_identifier = [aws_subnet.Private_Subnet1.id, aws_subnet.Private_Subnet2.id]
   # Enable the ELB health checks for the Auto Scaling
-  health_check_type   = "ELB"
-  desired_capacity    = 2
-  max_size            = 4
-  min_size            = 1
+  health_check_type = "ELB"
+  desired_capacity  = 2
+  max_size          = 4
+  min_size          = 1
   # This line links the Auto Scaling group to the ALB through the WebTG target group
-  target_group_arns   = [aws_lb_target_group.WebTG.arn]
+  target_group_arns = [aws_lb_target_group.WebTG.arn]
 
   launch_template {
     id      = aws_launch_template.WebLT.id
